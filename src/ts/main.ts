@@ -16,13 +16,14 @@ const arrays = {
 };
 const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 
-function render(time: DOMHighResTimeStamp) {
+function render() {
   twgl.resizeCanvasToDisplaySize(gl.canvas);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
   const uniforms = {
+    iRange: 2.0,
+    maxIterations: 30,
     resolution: [gl.canvas.width, gl.canvas.height],
-    time: time * 0.001,
   };
 
   gl.useProgram(programInfo.program);
