@@ -21,16 +21,16 @@ function render() {
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
   const uniforms = {
-    iRange: 2.0,
-    maxIterations: 30,
+    maxIterations: 75,
+    range: 2.0,
     resolution: [gl.canvas.width, gl.canvas.height],
+    subSamples: 10,
   };
 
   gl.useProgram(programInfo.program);
   twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
   twgl.setUniforms(programInfo, uniforms);
   twgl.drawBufferInfo(gl, bufferInfo);
-
-  requestAnimationFrame(render);
 }
-requestAnimationFrame(render);
+
+render();
