@@ -7,10 +7,9 @@ export default `
   uniform int subSamples;
 
   vec2 frag2complex(vec2 coord, vec2 resolution, float range) {
-    vec2 u = (coord / resolution) - 0.5;
-    u.x = u.x * (resolution.x / resolution.y);
-    vec2 c = range * u - vec2(0.5, 0.0);
-    return c;
+    vec2 u = coord / resolution - 0.5;
+    u.x *= resolution.x / resolution.y;
+    return range * u - vec2(0.5, 0.0);
   }
 
   int calcEscapeValue(vec2 c, int maxIterations) {
@@ -30,7 +29,7 @@ export default `
 
     for (int i = 0; i < 100000; i++) {
       if (i == subSamples) break;
-      vec2 subPixel = (float(i + 1) * (pixelComplexWidth / float(subSamples + 1))) + c;
+      vec2 subPixel = float(i + 1) * (pixelComplexWidth / float(subSamples + 1)) + c;
       iterationSum += calcEscapeValue(subPixel, maxIterations);
     }
 
