@@ -16,16 +16,17 @@ const arrays = {
 };
 const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 
-function render() {
+const params = {
+  maxIterations: 75,
+  range: 4.0,
+  resolution: [gl.canvas.width, gl.canvas.height],
+  subSamples: 10,
+  zoom: 2.0,
+};
+
+function render(uniforms: object) {
   twgl.resizeCanvasToDisplaySize(gl.canvas);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-  const uniforms = {
-    maxIterations: 75,
-    range: 2.0,
-    resolution: [gl.canvas.width, gl.canvas.height],
-    subSamples: 10,
-  };
 
   gl.useProgram(programInfo.program);
   twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
@@ -33,4 +34,9 @@ function render() {
   twgl.drawBufferInfo(gl, bufferInfo);
 }
 
-render();
+render(params);
+
+cnv.addEventListener('click', e => {
+  params.zoom *= params.zoom;
+  render(params);
+});

@@ -5,11 +5,12 @@ export default `
   uniform float range;
   uniform vec2 resolution;
   uniform int subSamples;
+  uniform float zoom;
 
   vec2 frag2complex(vec2 coord, vec2 resolution, float range) {
     vec2 u = coord / resolution - 0.5;
     u.x *= resolution.x / resolution.y;
-    return range * u - vec2(0.5, 0.0);
+    return range / zoom * u - vec2(0.5, 0.0);
   }
 
   int calcEscapeValue(vec2 c, int maxIterations) {
@@ -29,7 +30,7 @@ export default `
 
     for (int i = 0; i < 100000; i++) {
       if (i == subSamples) break;
-      vec2 subPixel = float(i + 1) * (pixelComplexWidth / float(subSamples + 1)) + c;
+      vec2 subPixel = float(i + 1) * pixelComplexWidth / float(subSamples + 1) + c;
       iterationSum += calcEscapeValue(subPixel, maxIterations);
     }
 
@@ -37,7 +38,7 @@ export default `
     if (escapeValue == float(maxIterations)) {
       gl_FragColor = vec4(vec3(0.0), 1);
     } else {
-      gl_FragColor = vec4(vec3(escapeValue / float(maxIterations - 1)), 1.0);
+      gl_FragColor = vec4(vec3(escapeValue / float(maxIterations)), 1.0);
     }
   }
 `;
