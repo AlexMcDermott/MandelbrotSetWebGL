@@ -2,16 +2,9 @@ export default `
   precision mediump float;
 
   uniform int maxIterations;
-  uniform float range;
   uniform vec2 resolution;
-  uniform int subSamples;
-  uniform float zoom;
-
-  vec2 frag2complex(vec2 coord, vec2 resolution, float range) {
-    vec2 u = coord / resolution - 0.5;
-    u.x *= resolution.x / resolution.y;
-    return range / zoom * u - vec2(0.5, 0.0);
-  }
+  uniform vec2 maxBounds;
+  uniform vec2 minBounds;
 
   int calcEscapeValue(vec2 c, int maxIterations) {
     vec2 z = vec2(0.0);
@@ -22,23 +15,12 @@ export default `
   }
 
   void main() {
-    vec2 p1 = frag2complex(vec2(0), resolution, range);
-    vec2 p2 = frag2complex(vec2(1), resolution, range);
-    vec2 pixelComplexWidth = p2 - p1;
-    vec2 c = frag2complex(gl_FragCoord.xy, resolution, range);
-    int iterationSum = 0;
-
-    for (int i = 0; i < 100000; i++) {
-      if (i == subSamples) break;
-      vec2 subPixel = float(i + 1) * pixelComplexWidth / float(subSamples + 1) + c;
-      iterationSum += calcEscapeValue(subPixel, maxIterations);
-    }
-
-    float escapeValue = float(iterationSum) / float(subSamples);
-    if (escapeValue == float(maxIterations)) {
-      gl_FragColor = vec4(vec3(0.0), 1);
+    vec2 c = (gl_FragCoord.xy / resolution) * (maxBounds - minBounds) + minBounds;
+    int escapeValue = calcEscapeValue(c, maxIterations);
+    if (escapeValue == maxIterations) {
+      gl_FragColor = vec4(vec3(0), 1);
     } else {
-      gl_FragColor = vec4(vec3(escapeValue / float(maxIterations)), 1.0);
+      gl_FragColor = vec4(vec3(float(escapeValue) / float(maxIterations)), 1.0);
     }
   }
 `;
