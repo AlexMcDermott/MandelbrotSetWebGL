@@ -30,6 +30,7 @@ interface Parameters {
   maxIterations: number;
   range: number;
   zoom: number;
+  subSamples: number;
   resolution: number[];
   maxBounds: number[];
   minBounds: number[];
@@ -40,6 +41,7 @@ function calcParams(center: number[], zoom = 2): Parameters {
     maxIterations: 75,
     range: 4,
     zoom,
+    subSamples: 10,
     resolution: [gl.canvas.width, gl.canvas.height],
     maxBounds: [0, 0],
     minBounds: [0, 0],
