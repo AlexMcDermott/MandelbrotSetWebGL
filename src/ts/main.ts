@@ -39,7 +39,7 @@ interface Parameters {
 function calcParams(center: number[], zoom = 2): Parameters {
   const params = {
     maxIterations: 75,
-    range: 4,
+    range: 8,
     zoom,
     subSamples: 10,
     resolution: [gl.canvas.width, gl.canvas.height],
@@ -51,11 +51,11 @@ function calcParams(center: number[], zoom = 2): Parameters {
 
 function updateBounds(center: number[], params: Parameters) {
   const rangeRadius = params.range / params.zoom / 2;
-  const aspectRatio = params.resolution[0] / params.resolution[1];
-  const maxR = center[0] + rangeRadius * aspectRatio;
-  const minR = center[0] - rangeRadius * aspectRatio;
-  const maxI = center[1] + rangeRadius;
-  const minI = center[1] - rangeRadius;
+  const aspectRatio = params.resolution[1] / params.resolution[0];
+  const maxR = center[0] + rangeRadius;
+  const minR = center[0] - rangeRadius;
+  const maxI = center[1] + rangeRadius * aspectRatio;
+  const minI = center[1] - rangeRadius * aspectRatio;
   const maxBounds = [maxR, maxI];
   const minBounds = [minR, minI];
   params.maxBounds = maxBounds;
@@ -65,8 +65,9 @@ function updateBounds(center: number[], params: Parameters) {
 
 function calcCenter(mouseX: number, mouseY: number, params: Parameters) {
   const range = params.range / params.zoom;
-  const rRange = range * (params.resolution[0] / params.resolution[1]);
-  const iRange = range;
+  const aspectRatio = params.resolution[1] / params.resolution[0];
+  const rRange = range;
+  const iRange = range * aspectRatio;
   const percentageR = (mouseX / params.resolution[0]) * rRange;
   const percentageI = (1 - mouseY / params.resolution[1]) * iRange;
   const centerR = percentageR + params.minBounds[0];
