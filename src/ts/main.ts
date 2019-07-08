@@ -4,8 +4,7 @@ import { default as fragmentSource } from './shader/fragment';
 import { default as vertexSource } from './shader/vertex';
 
 const cnv = document.createElement('canvas');
-cnv.width = window.innerWidth;
-cnv.height = window.innerHeight;
+
 document.body.appendChild(cnv);
 const gl = cnv.getContext('webgl');
 
@@ -75,11 +74,22 @@ function calcCenter(mouseX: number, mouseY: number, params: Parameters) {
   return [centerR, centerI];
 }
 
-let params = calcParams([-0.5, 0]);
-render(params);
+function start() {
+  cnv.width = window.innerWidth;
+  cnv.height = window.innerHeight;
+  params = calcParams([-0.5, 0]);
+  render(params);
+}
+
+let params: Parameters;
+start();
 
 cnv.addEventListener('click', e => {
   const center = calcCenter(e.clientX, e.clientY, params);
   params = calcParams(center, params.zoom * 2);
   render(params);
+});
+
+window.addEventListener('resize', () => {
+  start();
 });
