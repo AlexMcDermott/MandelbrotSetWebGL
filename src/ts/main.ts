@@ -4,9 +4,8 @@ import { default as fragmentSource } from './shader/fragment';
 import { default as vertexSource } from './shader/vertex';
 
 const cnv = document.createElement('canvas');
-
-document.body.appendChild(cnv);
 const gl = cnv.getContext('webgl');
+document.body.appendChild(cnv);
 
 const programInfo = twgl.createProgramInfo(gl, [vertexSource, fragmentSource]);
 
